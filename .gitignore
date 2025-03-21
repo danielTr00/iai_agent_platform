@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+/agents/archive/**
+/chat_history/
+scenario_coordination/chat_history/
+vector_db/
+# Tests
+/tests/
+/tests/**
+scenario_coordination/tests/
+scenario_coordination/testing/
+scenario_coordination/testing/**
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.env
+*.env
+app.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Project specific
+results/
+cache/
+data/
+files/
+# Logs
+scenario_coordination/logs/
+scenario_coordination/logs/**/
+*.log
