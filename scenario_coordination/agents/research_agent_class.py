@@ -523,6 +523,7 @@ class BasicAgent:
             jitter=True            # Add randomness to retry intervals to prevent thundering herd
         )
         checkpointer = InMemorySaver()
+        
         # Create state graph
         graph = StateGraph(OverallState)
         
@@ -562,7 +563,7 @@ class BasicAgent:
         """
         # Get current timestamp from metadata for time-based queries
         current_time = datetime.now()
-        
+        config = {"configurable": {"thread_id": "1"}}
         # Get last exchange if available
         last_exchange = self.get_last_exchange()
         
@@ -593,7 +594,7 @@ class BasicAgent:
         try:
             # Run the flow
             last_output = None
-            for output in self.graph.stream(initial_state):
+            for output in self.graph.stream(initial_state,config = config):
                 last_output = output
                 for key, value in output.items():
                     try:
@@ -659,7 +660,7 @@ class BasicAgent:
             # If we still don't have a good answer, try using the agent directly
             if final_answer == "No final answer generated":
                 try:
-                    direct_response = self.agent.invoke({"messages": [SystemMessage(content=self.system_prompt), HumanMessage(content=question)]})
+                    direct_response = self.agent.invoke({"messages": [SystemMessage(content=self.system_prompt), HumanMessage(content=question)]},config = config)
                     
                     if isinstance(direct_response, dict) and "messages" in direct_response and direct_response["messages"]:
                         final_answer = direct_response["messages"][-1].content
@@ -722,7 +723,7 @@ class BasicAgent:
                     content={"message": "Attempting direct agent fallback"}
                 )
                 
-                direct_response = self.agent.invoke({"messages": [SystemMessage(content=self.system_prompt), HumanMessage(content=question)]})
+                direct_response = self.agent.invoke({"messages": [SystemMessage(content=self.system_prompt), HumanMessage(content=question)]},config = config)
                 
                 fallback_answer = "No answer generated"
                 if isinstance(direct_response, dict) and "messages" in direct_response and direct_response["messages"]:
@@ -763,6 +764,3 @@ class BasicAgent:
                 log_file = self.logger.save_log()
                 
                 return error_message
-
-from dotenv import load_dotenv
-load_dotenv('/Users/Uni/Desktop/Coding/studienarbeit/venv/Scenario_Agency/config/app.env')
