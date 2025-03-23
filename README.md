@@ -36,6 +36,20 @@ The main dependencies include:
 
 See `requirements.txt` for a complete list of dependencies.
 
+## Prerequisites
+
+Before setting up the platform, you'll need:
+
+1. **Docker**: Required to run the containerized version of the application
+   - [Install Docker](https://docs.docker.com/get-started/get-docker/)
+
+2. **Ollama** (Optional): For running local embedding models and LLMs
+   - [Install Ollama](https://ollama.com/download)
+
+3. **Tavily API Key** (Required for web search functionality):
+   - Register for a free tier account at [Tavily](https://tavily.com/)
+   - Create an API key in your Tavily dashboard
+
 ## Setup
 
 1. Install dependencies:
@@ -49,6 +63,7 @@ Create a `.env` file in the config directory with your API keys:
 GROQ_API_KEY=your_groq_api_key
 OPENAI_API_KEY=your_openai_api_key
 ANTHROPIC_API_KEY=your_anthropic_api_key
+TAVILY_API_KEY=your_tavily_api_key
 # Add other API keys as needed
 ```
 
