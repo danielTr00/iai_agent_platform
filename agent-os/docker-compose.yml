@@ -1,0 +1,48 @@
+services:
+  claude-core:
+    build: ./claude-core
+    container_name: agent-os-claude-core
+    # Abo-Auth: OAuth-Token statt API-Key. KEIN ANTHROPIC_API_KEY hier setzen,
+    # sonst greift die per-Token-API-Abrechnung statt des Max-Abos.
+    environment:
+      - CLAUDE_CODE_OAUTH_TOKEN=${CLAUDE_CODE_OAUTH_TOKEN}
+    volumes:
+      - ./claude-core/workspace:/workspace
+    working_dir: /workspace
+    # Container bleibt am Leben; das Backend fuehrt `claude -p` per `docker exec` aus.
+    command: ["sleep", "infinity"]
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: agent-os-backend
+    depends_on:
+      - claude-core
+    environment:
+      - HARNESS_TOKEN=${HARNESS_TOKEN}
+      - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY:-}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+      - CONFIG_PATH=/app/config.yaml
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/config.yaml:/app/config.yaml
+      - ./frontend/public:/app/frontend:ro
+      - ./claude-core/workspace:/workspace:ro
+      # Docker-Socket, damit das Backend `docker exec` in claude-core ausfuehren kann.
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  # Optional: nur aktiv, wenn du ohne Tailscale eine oeffentliche URL willst.
+  # caddy:
+  #   image: caddy:2
+  #   depends_on: [backend]
+  #   ports: ["80:80", "443:443"]
+  #   volumes:
+  #     - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+  #     - caddy_data:/data
+  #   restart: unless-stopped
+
+# volumes:
+#   caddy_data:

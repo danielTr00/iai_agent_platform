@@ -1,0 +1,29 @@
+# Provider-Auswahl mit Fallback-Kette (Vorbild: Hermes Agent).
+# Das jeweils erste erreichbare Backend gewinnt; faellt es aus, das naechste.
+
+stt:
+  # Reihenfolge = Prioritaet. "local" braucht keinen Key.
+  chain: ["elevenlabs", "local"]
+  local:
+    model: "base"        # tiny | base | small | medium | large-v3
+    device: "cpu"        # "cuda" wenn GPU vorhanden
+  elevenlabs:
+    model_id: "scribe_v1"
+
+tts:
+  chain: ["elevenlabs", "piper"]
+  elevenlabs:
+    voice_id: "Rachel"           # deine Wunschstimme
+    model_id: "eleven_turbo_v2_5"
+  piper:
+    voice: "en_US-amy-medium"    # lokales Piper-Modell
+  # Satz-Chunker (aus Hermes uebernommen)
+  min_chunk_chars: 20
+  strip_markdown: true
+
+claude:
+  # Wie das Backend Claude Code aufruft. "docker" = `docker exec` in claude-core.
+  mode: "docker"
+  container: "agent-os-claude-core"
+  workdir: "/workspace"
+  # Skills werden in /workspace/.claude/skills gemountet und automatisch geladen.

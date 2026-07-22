@@ -1,0 +1,7 @@
+.env
+*.pyc
+__pycache__/
+claude-core/workspace/output/
+claude-core/workspace/.claude/projects/
+node_modules/
+*.log

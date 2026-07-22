@@ -1,0 +1,7 @@
+# Nur noetig, wenn du OHNE Tailscale eine oeffentliche HTTPS-URL willst.
+# Domain eintragen und im docker-compose.yml den caddy-Service einkommentieren.
+# Caddy holt automatisch ein Let's-Encrypt-Zertifikat.
+
+deine-domain.example {
+    reverse_proxy backend:8000
+}
